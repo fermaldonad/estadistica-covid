@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <title>
+        Estadisticas Covid-19</title>
+</head>
+
+<body>
+    <div class="container-fluid" id="app">
+        <header class="row bg-dark p-3 text-white">
+            <div class="col-sm-12 col-md-4">
+                <div class="media">
+                    <h4 class="display-4">
+                        <i class="fas fa-virus aling-self-center "></i>
+                    </h4>
+                    <div class="media-body">
+                        <h5 class="display-5 mt-4">
+                            Estadisticas Covid-19
+                           
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-8">
+                <div class="media">
+                    <div class="media-body">
+                        Aqui encontrara informacion de casos de contagio, decesos,recuperados y tasa de mortalidad entre
+                        otros
+                        <br>
+                        <select class="custom-select" v-model="paiscode" @change="paisSelecionado()">
+                        <option v-for ="pais in paisesList":value="pais.code"> {{pais.name}}</option>
+                        </select>
+                    </div>
+        </header>
+        <section class="mb-1-p-1">
+            <div class="row p-1">
+                <div class="col-sm-12 col-md-4">
+                    <div class="card bg-primary text-center text-white">
+                        <div class="card-body">
+                            <h4 class="card-title display-4 mt-2">
+                                <i class="fas fa-lungs-virus"></i>
+                            </h4>
+                            <h5 class="card-subtitle mb-2 display-5">
+                            <strong>
+                                Contagios <br>
+                                {{paisDatos.latest_data.confirmed}} de {{paisDatos.population}} Habitantes
+                            </strong>
+                            </h5>
+                            <p class="card-text">
+                                Ultima actualizacion <br>
+                                {{paisDatos.updated_at}}
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="card bg-dark text-center text-white">
+                        <div class="card-body">
+                            <h4 class="card-title display-4 mt-2">
+                                <i class="fas fa-prescription-bottle-alt"></i>
+                            </h4>
+                            <h5 class="card-subtitle mb-2 display-5">
+                                Datos del dia <br>
+                                &nbsp;
+                            </h5>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4">
+                                    <strong>
+                                        {{paisDatos.timeline[0].new_confirmed}}
+                                    </strong>
+                                    <br>
+                                    Contagios
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <strong>
+                                        {{paisDatos.timeline[0].new_recovered}}
+                                    </strong>
+                                    <br>
+                                    Recuperados
+                                </div>
+                                <div class="col-sm-4 col-md-4">
+                                    <strong>
+                                        {{paisDatos.timeline[0].new_deaths}}
+                                    </strong>
+                                    <br>
+                                    Fallecidos
+                                </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="card bg-info text-center text-white">
+                        <div class="card-body">
+                            <h4 class="card-title display-4 mt-2">
+                                <i class="fas fa-users"></i>
+                            </h4>
+                            <h5 class="card-subtitle mb-2 display-5">
+                            {{paisDatos.latest_data.calculated.cases_per_million_population}} Casos <br>
+                                Por millon de habitantes
+                            </h5>
+                            <br>
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-sm-6 col-md-3">
+                        <span class="border border-white"></span>
+                        <div class="card bg-warning text-center text-white">
+                            <div class="card-body">
+                                <h4 class="card-title display-4 mt-2">
+                                    <i class="fas fa-hospital-user"></i>
+                                </h4>
+                                <h5 class="card-subtitle mb-2 display-5">
+                                    <strong>
+                                        Casos activos <br> {{paisDatos.timeline[0].active}}
+                                    </strong>
+                                </h5>
+                                <p class="card-text"> &nbsp;
+                                </p>
+                            </div>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-md-3">
+                        <span class="border border-white"></span>
+                        <div class="card bg-danger text-center text-white">
+                            <div class="card-body">
+                                <h4 class="card-title display-4 mt-2">
+                                    <i class="fas fa-procedures"></i>
+                                </h4>
+                                <h5 class="card-subtitle mb-2 display-5">
+                                    <strong>
+                                        Casos criticos <br> {{paisDatos.latest_data.critical}}
+                                    </strong>
+                                </h5>
+                                <p class="card-text">&nbsp;
+                                </p>
+                            </div>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-md-3">
+                        <span class="border border-white"></span>
+                        <div class="card bg-success text-center text-white">
+                            <div class="card-body">
+                                <h4 class="card-title display-4 mt-2">
+                                    <i class="fas fa-user-md"></i>
+                                </h4>
+                                <h5 class="card-subtitle mb-2 display-5">
+                                    <strong>
+                                        Casos Recuperados <br>{{paisDatos.latest_data.recovered}},
+                                        {{                                          
+                                            parseFloat(paisDatos.latest_data.calculated.recovery_rate).toFixed(2)
+                                        }} %
+                                    </strong>
+                                </h5>
+                                <p class="card-text">&nbsp;
+                                </p>
+                            </div>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-md-3">
+                        <span class="border border-white"></span>
+                        <div class="card bg-dark text-center text-white">
+                            <div class="card-body">
+                                <h4 class="card-title display-4 mt-2">
+                                    <i class="fas fa-church"></i>
+                                </h4>
+                                <h5 class="card-subtitle mb-2 display-5">
+                                    <strong>
+                                        Casos Fallecidos <br> {{paisDatos.latest_data.deaths}}
+                                    </strong>
+                                </h5>
+                                <p class="card-text">
+                                    {{                                          
+                                        parseFloat(paisDatos.latest_data.calculated.death_rate).toFixed(2)
+                                    }} %
+                                    &nbsp;
+                                </p>
+                            </div>
+                        </div>
+                     </div>
+        </section>
+        <footer class="footer fixed-bottom bg-dark text-center text-white p-1">
+            <p-m class="0">
+                App Web diseñada por Maria Fernanda Maldonado Gomez &copy 2020. Todos los datos han sido obtenidos desde la
+                API de <a href="http://about-corona.net/" target="_blank" rel="noopener noreferrer">about-corona.net</a>
+            </p-m>
+        </footer>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script type="text/javascript" >
+            var vueApp = new Vue({
+                el: '#app',
+                data: {
+               paisesList:[],
+               paiscode:"HN",
+               paisDatos:[],
+                },
+                created:function() {
+                    var url= "https://corona-api.com/countries/HN";
+                    axios.get(url,{header:{"accept":"application/json"}})
+                    .then(function (response) {
+                        vueApp.paisDatos=response.data.data;
+                    });
+                    url="https://corona-api.com/countries"
+                    axios.get(url,{header:{"accept":"application/json"}})
+                    .then(function (response) {
+                        vueApp.paisesList=response.data.data;
+                    });                       
+                },
+                methods:{
+                    paisSelecionado:function(){
+                        vueApp.paisDatos=[];
+                        var url= "https://corona-api.com/countries/"+vueApp.paiscode;
+                        axios.get(url,{header:{"accept":"application/json"}})
+                        .then(function (response) {
+                        vueApp.paisDatos=response.data.data;
+                    });  
+                    }
+                  },
+                })
+        </script>
+</body>
+
+
+</html>
